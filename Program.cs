@@ -8,7 +8,6 @@ namespace Task8
 		private static ServiceProvider CreateServices()
 		{
 			var sp = new ServiceCollection();
-			sp.AddTransient<IClient, Client>();
 			sp.AddTransient<IHandler, Handler>();
 			sp.AddLogging(builder => builder.AddConsole());
 
@@ -20,13 +19,8 @@ namespace Task8
 			var services = CreateServices();
 
 			var h = services.GetService<IHandler>();
-			var logger = services.GetService<ILogger<Program>>();
-
-			var res = await h.GetApplicationStatus(Guid.NewGuid().ToString("N"));
-			if (res is SuccessStatus ss)
-				logger.LogInformation("Success {Id}", ss.Id);
-			else if (res is FailureStatus fs)
-				logger.LogInformation("Failure {Time} {Count}", fs.LastRequestTime, fs.RetriesCount);
+			
+			await h.PerformOperation(CancellationToken.None);
 		}
 	}
 }
