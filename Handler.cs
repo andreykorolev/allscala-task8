@@ -31,6 +31,9 @@ namespace Task8
 			do
 			{
 				var data = await _consumer.ReadData();
+				if (data == null)
+					return;
+
 				var payload = data.Payload;
 
 				foreach (var recipient in data.Recipients)
@@ -50,6 +53,7 @@ namespace Task8
 						}
 					});
 				}
+
 			} while (!cancellationToken.IsCancellationRequested);
 		}
 	}
